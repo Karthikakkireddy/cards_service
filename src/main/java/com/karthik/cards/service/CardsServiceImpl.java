@@ -1,8 +1,11 @@
 package com.karthik.cards.service;
 
 import com.karthik.cards.constants.CardsConstants;
+import com.karthik.cards.dto.CardsDto;
 import com.karthik.cards.entity.Cards;
 import com.karthik.cards.exception.CardAlreadyExistsException;
+import com.karthik.cards.exception.ResourceNotFoundException;
+import com.karthik.cards.mapper.CardsMapper;
 import com.karthik.cards.repository.CardsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,5 +38,14 @@ public class CardsServiceImpl implements ICardsService
         newCard.setAmountUsed(0);
         newCard.setAvailableAmount(CardsConstants.NEW_CARD_LIMIT);
         return newCard;
+    }
+
+
+    @Override
+    public CardsDto fetchCard(String mobileNumber) {
+        Cards cards = cardsRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Card", "mobileNumber", mobileNumber)
+        );
+        return CardsMapper.mapToCardsDto(cards, new CardsDto());
     }
 }

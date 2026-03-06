@@ -1,4 +1,10 @@
 package com.karthik.cards.service;
 
-public interface ICardsService {
+public interface ICardsService
+{
+    /**
+     *
+     * @param mobileNumber - Mobile Number of the Customer
+     */
+    void createCard(String mobileNumber);
 }

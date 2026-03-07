@@ -4,6 +4,8 @@ import com.karthik.cards.constants.CardsConstants;
 import com.karthik.cards.dto.CardsDto;
 import com.karthik.cards.dto.ResponseDto;
 import com.karthik.cards.service.ICardsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+@Tag(
+        name = "CRUD REST APIs for Cards in Bank",
+        description = "CRUD REST APIs in Bank to CREATE, UPDATE, FETCH AND DELETE card details"
+)
 @RestController
 @RequestMapping(path = "/api", produces = {MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
@@ -20,6 +27,10 @@ public class CardsController
     private final ICardsService iCardsService;
 
 
+    @Operation(
+            summary = "Create Card REST API",
+            description = "REST API to create new Card inside Bank"
+    )
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createCard(@Valid @RequestParam
                                                   @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
@@ -30,6 +41,10 @@ public class CardsController
                 .body(new ResponseDto(CardsConstants.STATUS_201, CardsConstants.MESSAGE_201));
     }
 
+    @Operation(
+            summary = "Fetch Card Details REST API",
+            description = "REST API to fetch card details based on a mobile number"
+    )
     @GetMapping("/fetch")
     public ResponseEntity<CardsDto> fetchCardDetails(@RequestParam
                                                      @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
@@ -38,6 +53,10 @@ public class CardsController
         return ResponseEntity.status(HttpStatus.OK).body(cardsDto);
     }
 
+    @Operation(
+            summary = "Update Card Details REST API",
+            description = "REST API to update card details based on a card number"
+    )
     @PutMapping("/update")
     public ResponseEntity<ResponseDto> updateCardDetails(@Valid @RequestBody CardsDto cardsDto) {
         boolean isUpdated = iCardsService.updateCard(cardsDto);
@@ -52,7 +71,10 @@ public class CardsController
         }
     }
 
-
+    @Operation(
+            summary = "Delete Card Details REST API",
+            description = "REST API to delete Card details based on a mobile number"
+    )
     @DeleteMapping("/delete")
     public ResponseEntity<ResponseDto> deleteCardDetails(@RequestParam
                                                          @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
